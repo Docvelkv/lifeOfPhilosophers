@@ -1,6 +1,6 @@
 public class Philosopher extends Thread{
-    private final Fork leftFork;
     private final Fork rightFork;
+    private final Fork leftFork;
     private int numMeals = 0; // счётчик приёмов пищи
 
     /**
@@ -39,17 +39,17 @@ public class Philosopher extends Thread{
     public void run(){
         while (numMeals < 3){
             action("работает");
-            synchronized (leftFork){
+            synchronized (leftFork) {
                 action("взял левую вилку");
+                synchronized (rightFork) {
+                    action("взял правую вилку");
+                    if (numMeals == 0) action("завтракает");
+                    if (numMeals == 1) action("обедает");
+                    if (numMeals == 2) action("ужинает");
+                    numMeals++;
+                    durationAct();
+                }
             }
-            synchronized (rightFork){
-                action("взял правую вилку");
-            }
-            if(numMeals == 0) action("завтракает");
-            if(numMeals == 1) action("обедает");
-            if(numMeals == 2) action("ужинает");
-            numMeals++;
-            durationAct();
             action("вернулся к работе");
         }
     }
